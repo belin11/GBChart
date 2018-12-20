@@ -13,6 +13,7 @@
 @property (nonatomic) CAShapeLayer *circle;
 @property (nonatomic) CAShapeLayer *gradientMask;
 @property (nonatomic) CAShapeLayer *circleBackground;
+@property (nonatomic) BOOL closewise;
 
 @end
 
@@ -45,17 +46,17 @@
         _duration = 1.0;
         _displayAnimated = YES;
         _displayCountingLabel = displayCountingLabel;
+        _closewise = clockwise;
         
         CGPoint center = CGPointMake(frame.size.width/2, frame.size.height/2);
         CGFloat r = MIN(CGRectGetWidth(frame), CGRectGetHeight(frame))/2 - _lineWidth.floatValue/2;
-        UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:r startAngle:-M_PI_2 endAngle:-M_PI_2+2*M_PI clockwise:clockwise];
         
         _circle = [CAShapeLayer layer];
         _circle.lineWidth = _lineWidth.floatValue;
         _circle.lineCap = kCALineCapRound;
         _circle.strokeColor = _strokeColor.CGColor;
         _circle.fillColor = [UIColor clearColor].CGColor;
-        _circle.path = path.CGPath;
+        _circle.zPosition = 1;
         [self.layer addSublayer:_circle];
         
         if (hasBackgroundShadow) {
@@ -64,7 +65,7 @@
             _circleBackground.lineCap = kCALineCapRound;
             _circleBackground.strokeColor = backgroundShadowColor.CGColor;
             _circleBackground.fillColor = [UIColor clearColor].CGColor;
-            _circleBackground.path = path.CGPath;
+            _circleBackground.zPosition = -1;
             [self.layer addSublayer:_circleBackground];
         }
         
@@ -75,9 +76,7 @@
             _countingLabel.font = [UIFont systemFontOfSize:16];
             _countingLabel.textAlignment = NSTextAlignmentCenter;
             _countingLabel.numberOfLines = 0;
-//            _countingLabel.backgroundColor = [UIColor lightGrayColor];
             _countingLabel.method = UILabelCountingMethodEaseInOut;
-            _countingLabel.format = @"%.1f%%";
             [self addSubview:_countingLabel];
         }
         
@@ -93,35 +92,44 @@
         _circle.shadowOpacity = 0.5;
         _circle.shadowOffset = CGSizeMake(0, 0);
     }
+    _circle.lineWidth = _lineWidth.floatValue;
+    _circleBackground.lineWidth = _lineWidth.floatValue;
     _circle.strokeColor = _strokeColor.CGColor;
+    
+    CGRect frame = self.frame;
+    CGPoint center = CGPointMake(frame.size.width/2, frame.size.height/2);
+    CGFloat r = MIN(CGRectGetWidth(frame), CGRectGetHeight(frame))/2 - _lineWidth.floatValue/2;
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:r startAngle:-M_PI_2 endAngle:-M_PI_2+2*M_PI clockwise:_closewise];
+    _circle.path = path.CGPath;
+    _circleBackground.path = path.CGPath;
 
     _circle.strokeEnd = _current.floatValue/_total.floatValue;
-    if (_displayCountingLabel) {
-        CGFloat totalPercentageValue = [_current floatValue]/([_total floatValue]/100.0);
-        [_countingLabel countFromZeroTo:totalPercentageValue withDuration:_duration];
-    }
+    
     if (_strokeColorGradientStart) {
-
+        
         self.gradientMask = [CAShapeLayer layer];
         self.gradientMask.fillColor = [[UIColor clearColor] CGColor];
         self.gradientMask.strokeColor = [[UIColor blackColor] CGColor];
         self.gradientMask.lineWidth = _circle.lineWidth;
         self.gradientMask.lineCap = kCALineCapRound;
-        CGRect gradientFrame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
-        self.gradientMask.frame = gradientFrame;
-        self.gradientMask.path = _circle.path;
-
+        self.gradientMask.path = path.CGPath;
+        _gradientMask.strokeEnd = _current.floatValue/_total.floatValue;
+        
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.startPoint = CGPointMake(0.5, 0.0);
         gradientLayer.endPoint = CGPointMake(0.5, 1.0);
         gradientLayer.colors = @[(id)_strokeColorGradientStart.CGColor, (id)_strokeColor.CGColor];
-        gradientLayer.frame = gradientFrame;
+        gradientLayer.frame = self.bounds;
         gradientLayer.mask = _gradientMask;
-
         [_circle addSublayer:gradientLayer];
-
-        _gradientMask.strokeEnd = _current.floatValue/_total.floatValue;
     }
+    
+
+    if (_displayCountingLabel) {
+        CGFloat totalPercentageValue = [_current floatValue]/([_total floatValue]/100.0);
+        [_countingLabel countFromZeroTo:totalPercentageValue withDuration:_displayAnimated?_duration:0];
+    }
+    
     if (_displayAnimated) {
         [self addAnimationIfNeededWithFromValue:@0 toValue:@(_current.floatValue/_total.floatValue)];
     }
@@ -142,10 +150,11 @@
     
     if (_displayCountingLabel) {
         CGFloat totalPercentageValue = [current floatValue]/([total floatValue]/100.0);
-        [_countingLabel countFrom:_current.floatValue to:totalPercentageValue withDuration:_duration];
+        [_countingLabel countFrom:_current.floatValue to:totalPercentageValue withDuration:_displayAnimated?_duration:0];
     }
-    [self addAnimationIfNeededWithFromValue:@(_current.floatValue/_total.floatValue) toValue:@(current.floatValue/total.floatValue)];
-
+    if (_displayAnimated) {
+        [self addAnimationIfNeededWithFromValue:@(_current.floatValue/_total.floatValue) toValue:@(current.floatValue/total.floatValue)];
+    }
     _current = current;
     _total = total;
 }

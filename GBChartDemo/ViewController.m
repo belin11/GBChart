@@ -32,7 +32,7 @@
 
 - (void)circleChart {
     
-    GBCircleChart *circleChart = [[GBCircleChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.frame), 200) total:@100 current:@30 clockwise:YES shadow:YES shadowColor:[[UIColor grayColor] colorWithAlphaComponent:0.4] displayCountingLabel:YES overrideLineWidth:@10];
+    GBCircleChart *circleChart = [[GBCircleChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.frame), 200) total:@100 current:@30 clockwise:YES shadow:YES shadowColor:[[UIColor grayColor] colorWithAlphaComponent:0.4] displayCountingLabel:YES overrideLineWidth:@4];
     [self.view addSubview:circleChart];
     circleChart.strokeColorGradientStart = [UIColor blueColor];
     circleChart.strokeColor = [UIColor redColor];
