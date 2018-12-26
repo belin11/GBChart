@@ -104,7 +104,7 @@
 ### 2.圆环图的使用
 
 **首先**，我们看一下效果图：
-![圆环效果图.png](https://upload-images.jianshu.io/upload_images/1707594-0841f12ab571ecc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![圆环效果图.png](https://github.com/belin11/GBChart/blob/master/圆状图.png)
 
 **其次**，实现原理也是比较简单的，底部是一个圆，上面同样位置现叠加一个有会值的圆，中间的文字引用第三方框架***[UICountingLabel](https://github.com/dataxpress/UICountingLabel) ***
 
