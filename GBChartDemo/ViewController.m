@@ -95,10 +95,9 @@
     
     GBLineChart *chart = [[GBLineChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.bounds), 220)];
     [self.view addSubview:chart];
-    chart.XLabelTitles = @[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月",@"13月",@"14月",@"15月"];
+    chart.XLabelTitles = @[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月",];
 //    chart.YLabelTitles = @[@"0", @"20", @"40", @"60", @"80", @"100"];
     chart.XLabelRotationAngle = M_PI/6;
-    
     
     NSMutableArray *array = [NSMutableArray array];
     NSMutableArray *array1 = [NSMutableArray array];
@@ -148,7 +147,7 @@
         return [GBLineChartDataItem dataItemWithY:[array1[item] floatValue]];
     };
     
-    chart.lineChartDatas = @[data, ];
+    chart.lineChartDatas = @[data, data1];
     chart.showGradientArea = YES;
     chart.chartMarginLeft = 35;
     
