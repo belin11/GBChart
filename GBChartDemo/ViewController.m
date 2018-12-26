@@ -25,10 +25,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor grayColor];
+//    self.view.backgroundColor = [UIColor grayColor];
 //    [self radarChart];
-//    [self circleChart];
-    [self lineChart];
+    [self circleChart];
+//    [self lineChart];
 }
 
 - (void)circleChart {
