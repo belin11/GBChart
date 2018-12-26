@@ -7,31 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		206E1ECA21CCFE4A00022A26 /* GBLineChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 206E1EC921CCFE4A00022A26 /* GBLineChartData.m */; };
-		207AD1BD21BF636A00ACE971 /* GBRadarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 207AD1BC21BF636A00ACE971 /* GBRadarChart.m */; };
-		207AD1C321BF64B600ACE971 /* GBRadarChartDataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 207AD1C221BF64B600ACE971 /* GBRadarChartDataItem.m */; };
-		2082FE8921C8EA2600CAF17A /* GBCircleChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2082FE8821C8EA2600CAF17A /* GBCircleChart.m */; };
 		2082FE8C21C8EAE800CAF17A /* UICountingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2082FE8B21C8EAE800CAF17A /* UICountingLabel.m */; };
+		20C5DFB021D32B0F006EB083 /* GBRadarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C5DFA621D32B0F006EB083 /* GBRadarChart.m */; };
+		20C5DFB121D32B0F006EB083 /* GBLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C5DFA721D32B0F006EB083 /* GBLineChart.m */; };
+		20C5DFB221D32B0F006EB083 /* GBCircleChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C5DFAC21D32B0F006EB083 /* GBCircleChart.m */; };
+		20C5DFB321D32B0F006EB083 /* GBRadarChartDataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C5DFAD21D32B0F006EB083 /* GBRadarChartDataItem.m */; };
+		20C5DFB421D32B0F006EB083 /* GBLineChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C5DFAE21D32B0F006EB083 /* GBLineChartData.m */; };
 		20D5B61521BE34070026466B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D5B61421BE34070026466B /* AppDelegate.m */; };
 		20D5B61821BE34070026466B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D5B61721BE34070026466B /* ViewController.m */; };
 		20D5B61B21BE34070026466B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20D5B61921BE34070026466B /* Main.storyboard */; };
 		20D5B61D21BE34090026466B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20D5B61C21BE34090026466B /* Assets.xcassets */; };
 		20D5B62021BE34090026466B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20D5B61E21BE34090026466B /* LaunchScreen.storyboard */; };
 		20D5B62321BE34090026466B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D5B62221BE34090026466B /* main.m */; };
-		20D5B62B21BE34220026466B /* GBLineChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D5B62A21BE34220026466B /* GBLineChart.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		206E1EC821CCFE4A00022A26 /* GBLineChartData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBLineChartData.h; sourceTree = "<group>"; };
-		206E1EC921CCFE4A00022A26 /* GBLineChartData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBLineChartData.m; sourceTree = "<group>"; };
-		207AD1BB21BF636A00ACE971 /* GBRadarChart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBRadarChart.h; sourceTree = "<group>"; };
-		207AD1BC21BF636A00ACE971 /* GBRadarChart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBRadarChart.m; sourceTree = "<group>"; };
-		207AD1C121BF64B600ACE971 /* GBRadarChartDataItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBRadarChartDataItem.h; sourceTree = "<group>"; };
-		207AD1C221BF64B600ACE971 /* GBRadarChartDataItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBRadarChartDataItem.m; sourceTree = "<group>"; };
-		2082FE8721C8EA2600CAF17A /* GBCircleChart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBCircleChart.h; sourceTree = "<group>"; };
-		2082FE8821C8EA2600CAF17A /* GBCircleChart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBCircleChart.m; sourceTree = "<group>"; };
 		2082FE8A21C8EAE600CAF17A /* UICountingLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICountingLabel.h; sourceTree = "<group>"; };
 		2082FE8B21C8EAE800CAF17A /* UICountingLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICountingLabel.m; sourceTree = "<group>"; };
+		20C5DFA621D32B0F006EB083 /* GBRadarChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBRadarChart.m; sourceTree = "<group>"; };
+		20C5DFA721D32B0F006EB083 /* GBLineChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBLineChart.m; sourceTree = "<group>"; };
+		20C5DFA821D32B0F006EB083 /* GBLineChartData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBLineChartData.h; sourceTree = "<group>"; };
+		20C5DFA921D32B0F006EB083 /* GBRadarChartDataItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBRadarChartDataItem.h; sourceTree = "<group>"; };
+		20C5DFAA21D32B0F006EB083 /* GBCircleChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBCircleChart.h; sourceTree = "<group>"; };
+		20C5DFAB21D32B0F006EB083 /* GBRadarChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBRadarChart.h; sourceTree = "<group>"; };
+		20C5DFAC21D32B0F006EB083 /* GBCircleChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBCircleChart.m; sourceTree = "<group>"; };
+		20C5DFAD21D32B0F006EB083 /* GBRadarChartDataItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBRadarChartDataItem.m; sourceTree = "<group>"; };
+		20C5DFAE21D32B0F006EB083 /* GBLineChartData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBLineChartData.m; sourceTree = "<group>"; };
+		20C5DFAF21D32B0F006EB083 /* GBLineChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBLineChart.h; sourceTree = "<group>"; };
+		20C5DFB521D32B29006EB083 /* GBChart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBChart.h; sourceTree = "<group>"; };
 		20D5B61021BE34070026466B /* GBChartDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GBChartDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20D5B61321BE34070026466B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		20D5B61421BE34070026466B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -42,8 +45,6 @@
 		20D5B61F21BE34090026466B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20D5B62121BE34090026466B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20D5B62221BE34090026466B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		20D5B62921BE34220026466B /* GBLineChart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBLineChart.h; sourceTree = "<group>"; };
-		20D5B62A21BE34220026466B /* GBLineChart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBLineChart.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +58,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20C5DFA521D32B0F006EB083 /* GBChart */ = {
+			isa = PBXGroup;
+			children = (
+				20C5DFB521D32B29006EB083 /* GBChart.h */,
+				20C5DFAA21D32B0F006EB083 /* GBCircleChart.h */,
+				20C5DFAC21D32B0F006EB083 /* GBCircleChart.m */,
+				20C5DFAF21D32B0F006EB083 /* GBLineChart.h */,
+				20C5DFA721D32B0F006EB083 /* GBLineChart.m */,
+				20C5DFA821D32B0F006EB083 /* GBLineChartData.h */,
+				20C5DFAE21D32B0F006EB083 /* GBLineChartData.m */,
+				20C5DFAB21D32B0F006EB083 /* GBRadarChart.h */,
+				20C5DFA621D32B0F006EB083 /* GBRadarChart.m */,
+				20C5DFA921D32B0F006EB083 /* GBRadarChartDataItem.h */,
+				20C5DFAD21D32B0F006EB083 /* GBRadarChartDataItem.m */,
+			);
+			path = GBChart;
+			sourceTree = "<group>";
+		};
 		20D5B60721BE34070026466B = {
 			isa = PBXGroup;
 			children = (
@@ -80,18 +99,9 @@
 				20D5B61421BE34070026466B /* AppDelegate.m */,
 				20D5B61621BE34070026466B /* ViewController.h */,
 				20D5B61721BE34070026466B /* ViewController.m */,
-				20D5B62921BE34220026466B /* GBLineChart.h */,
-				20D5B62A21BE34220026466B /* GBLineChart.m */,
-				206E1EC821CCFE4A00022A26 /* GBLineChartData.h */,
-				206E1EC921CCFE4A00022A26 /* GBLineChartData.m */,
-				207AD1BB21BF636A00ACE971 /* GBRadarChart.h */,
-				207AD1BC21BF636A00ACE971 /* GBRadarChart.m */,
-				207AD1C121BF64B600ACE971 /* GBRadarChartDataItem.h */,
-				207AD1C221BF64B600ACE971 /* GBRadarChartDataItem.m */,
-				2082FE8721C8EA2600CAF17A /* GBCircleChart.h */,
-				2082FE8821C8EA2600CAF17A /* GBCircleChart.m */,
 				2082FE8A21C8EAE600CAF17A /* UICountingLabel.h */,
 				2082FE8B21C8EAE800CAF17A /* UICountingLabel.m */,
+				20C5DFA521D32B0F006EB083 /* GBChart */,
 				20D5B61921BE34070026466B /* Main.storyboard */,
 				20D5B61C21BE34090026466B /* Assets.xcassets */,
 				20D5B61E21BE34090026466B /* LaunchScreen.storyboard */,
@@ -172,14 +182,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				20D5B61821BE34070026466B /* ViewController.m in Sources */,
+				20C5DFB121D32B0F006EB083 /* GBLineChart.m in Sources */,
+				20C5DFB021D32B0F006EB083 /* GBRadarChart.m in Sources */,
 				2082FE8C21C8EAE800CAF17A /* UICountingLabel.m in Sources */,
-				207AD1C321BF64B600ACE971 /* GBRadarChartDataItem.m in Sources */,
-				207AD1BD21BF636A00ACE971 /* GBRadarChart.m in Sources */,
 				20D5B62321BE34090026466B /* main.m in Sources */,
+				20C5DFB221D32B0F006EB083 /* GBCircleChart.m in Sources */,
 				20D5B61521BE34070026466B /* AppDelegate.m in Sources */,
-				2082FE8921C8EA2600CAF17A /* GBCircleChart.m in Sources */,
-				206E1ECA21CCFE4A00022A26 /* GBLineChartData.m in Sources */,
-				20D5B62B21BE34220026466B /* GBLineChart.m in Sources */,
+				20C5DFB421D32B0F006EB083 /* GBLineChartData.m in Sources */,
+				20C5DFB321D32B0F006EB083 /* GBRadarChartDataItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -27,8 +27,8 @@
 
 /**
  更新图表
-
- @param chartData <#chartData description#>
+ 
+ @param chartData 模型数组
  */
 - (void)updateChartWithChartData:(NSArray *)chartData;
 
@@ -46,17 +46,15 @@
 @property (nonatomic) UIColor *plotStrokeColor;
 /** Default is black */
 @property (nonatomic) UIColor *fontColor;
-/** Default is orange 刻度颜色*/
+/** Default is orange */
 @property (nonatomic) UIColor *graduationColor;
 /** Default is 12 */
 @property (nonatomic) CGFloat fontSize;
-/** Controls the labels display style that around chart */
-//@property (nonatomic, assign) PNRadarChartLabelStyle labelStyle;
 /** Tap the label will display detail value ,default is YES. */
 @property (nonatomic, assign) BOOL isLabelTouchable;
 /** is show graduation on the chart ,default is NO. */
 @property (nonatomic, assign) BOOL isShowGraduation;
-/** 是否有动画 */
+/** is display animated, default is YES */
 @property (nonatomic, assign) BOOL displayAnimated;
 
 @end

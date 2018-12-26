@@ -7,10 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "GBLineChart.h"
-#import "GBRadarChart.h"
-#import "GBRadarChartDataItem.h"
-#import "GBCircleChart.h"
+#import "GBChart/GBChart.h"
 
 @interface ViewController ()
 {
@@ -25,9 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-//    self.view.backgroundColor = [UIColor grayColor];
-//    [self radarChart];
-    [self circleChart];
+    self.view.backgroundColor = [UIColor grayColor];
+    [self radarChart];
+//    [self circleChart];
 //    [self lineChart];
 }
 
