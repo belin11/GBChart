@@ -98,6 +98,29 @@
     [chart strokeChart];
     _lineChart = chart;
 ```
-
 好了，最后希望大大们下载使用，提出宝贵意见，一起学习进步~~~
 ---
+
+### 2.圆环图的使用
+
+**首先**，我们看一下效果图：
+![圆环效果图.png](https://github.com/belin11/GBChart/blob/master/圆状图.png)
+
+**其次**，实现原理也是比较简单的，底部是一个圆，上面同样位置现叠加一个有会值的圆，中间的文字引用第三方框架***[UICountingLabel](https://github.com/dataxpress/UICountingLabel) ***
+
+使用起来也非常简单
+```
+    GBCircleChart *circleChart = [[GBCircleChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.frame), 200) total:@100 current:@30 clockwise:YES shadow:YES shadowColor:[[UIColor grayColor] colorWithAlphaComponent:0.4] displayCountingLabel:YES overrideLineWidth:@4];
+    [self.view addSubview:circleChart];
+    circleChart.strokeColorGradientStart = [UIColor blueColor];
+    circleChart.strokeColor = [UIColor redColor];
+//    circleChart.shadowColor = [UIColor blueColor];
+    circleChart.countingLabel.formatBlock = ^NSString *(CGFloat value) {
+      
+        return [NSString stringWithFormat:@"%0.0f分\n我的成绩单", value];
+    };
+    [circleChart strokeChart];
+    _circleChart = circleChart;
+```
+
+
