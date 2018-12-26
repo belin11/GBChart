@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		206E1ECA21CCFE4A00022A26 /* GBLineChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 206E1EC921CCFE4A00022A26 /* GBLineChartData.m */; };
 		207AD1BD21BF636A00ACE971 /* GBRadarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 207AD1BC21BF636A00ACE971 /* GBRadarChart.m */; };
 		207AD1C321BF64B600ACE971 /* GBRadarChartDataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 207AD1C221BF64B600ACE971 /* GBRadarChartDataItem.m */; };
 		2082FE8921C8EA2600CAF17A /* GBCircleChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2082FE8821C8EA2600CAF17A /* GBCircleChart.m */; };
@@ -21,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		206E1EC821CCFE4A00022A26 /* GBLineChartData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBLineChartData.h; sourceTree = "<group>"; };
+		206E1EC921CCFE4A00022A26 /* GBLineChartData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBLineChartData.m; sourceTree = "<group>"; };
 		207AD1BB21BF636A00ACE971 /* GBRadarChart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBRadarChart.h; sourceTree = "<group>"; };
 		207AD1BC21BF636A00ACE971 /* GBRadarChart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBRadarChart.m; sourceTree = "<group>"; };
 		207AD1C121BF64B600ACE971 /* GBRadarChartDataItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBRadarChartDataItem.h; sourceTree = "<group>"; };
@@ -79,6 +82,8 @@
 				20D5B61721BE34070026466B /* ViewController.m */,
 				20D5B62921BE34220026466B /* GBLineChart.h */,
 				20D5B62A21BE34220026466B /* GBLineChart.m */,
+				206E1EC821CCFE4A00022A26 /* GBLineChartData.h */,
+				206E1EC921CCFE4A00022A26 /* GBLineChartData.m */,
 				207AD1BB21BF636A00ACE971 /* GBRadarChart.h */,
 				207AD1BC21BF636A00ACE971 /* GBRadarChart.m */,
 				207AD1C121BF64B600ACE971 /* GBRadarChartDataItem.h */,
@@ -173,6 +178,7 @@
 				20D5B62321BE34090026466B /* main.m in Sources */,
 				20D5B61521BE34070026466B /* AppDelegate.m in Sources */,
 				2082FE8921C8EA2600CAF17A /* GBCircleChart.m in Sources */,
+				206E1ECA21CCFE4A00022A26 /* GBLineChartData.m in Sources */,
 				20D5B62B21BE34220026466B /* GBLineChart.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

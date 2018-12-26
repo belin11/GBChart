@@ -42,7 +42,7 @@
 @property (nonatomic) UIColor *webColor;
 /** Default is green , with an alpha of 0.7 */
 @property (nonatomic) UIColor *plotFillColor;
-
+/** Default is green*/
 @property (nonatomic) UIColor *plotStrokeColor;
 /** Default is black */
 @property (nonatomic) UIColor *fontColor;

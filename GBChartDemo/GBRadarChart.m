@@ -42,7 +42,7 @@
     _maxValue = 1;
     _webColor = [UIColor grayColor];
     _plotFillColor = [UIColor colorWithRed:.4 green:.8 blue:.4 alpha:.7];
-    _plotStrokeColor = [UIColor redColor];
+    _plotStrokeColor = [UIColor colorWithRed:.4 green:.8 blue:.4 alpha:1.0];
     _fontColor = [UIColor blackColor];
     _graduationColor = [UIColor orangeColor];
     _fontSize = 12;
