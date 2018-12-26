@@ -16,7 +16,7 @@
 - 可支持折线图更新
 ---
 大家肯定会说：无图说个JB。行，先上效果图，是不是有种熟悉的感觉？
-![折线图.png](https://upload-images.jianshu.io/upload_images/1707594-16c943fb52f22336.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![折线图.png](https://github.com/belin11/GBChart/blob/master/折线图.png)
 
 #### 2.实现步骤
 实现步骤大概如下：
