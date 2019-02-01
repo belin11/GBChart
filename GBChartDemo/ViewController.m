@@ -23,9 +23,9 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor grayColor];
-    [self radarChart];
+//    [self radarChart];
 //    [self circleChart];
-//    [self lineChart];
+    [self lineChart];
 }
 
 - (void)circleChart {
@@ -92,14 +92,16 @@
     
     GBLineChart *chart = [[GBLineChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.bounds), 220)];
     [self.view addSubview:chart];
-    chart.XLabelTitles = @[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月",];
-//    chart.YLabelTitles = @[@"0", @"20", @"40", @"60", @"80", @"100"];
-    chart.XLabelRotationAngle = M_PI/6;
+    chart.xLabelTitles = @[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月",];
+    chart.yLabelTitles = @[@"0", @"20", @"40", @"60", @"80", @"100"];
+    chart.xLabelRotationAngle = M_PI/6;
+    chart.showCoordinateAxis = YES;
+    chart.xLabelAlignmentStyle = GBXLabelAlignmentStyleFullXAxis;
     
     NSMutableArray *array = [NSMutableArray array];
     NSMutableArray *array1 = [NSMutableArray array];
 
-    for (int i = 0; i < chart.XLabelTitles.count; i++) {
+    for (int i = 0; i < chart.xLabelTitles.count; i++) {
         NSNumber *a = [NSNumber numberWithInteger:arc4random() % 100];
         [array addObject:a];
         [array1 addObject:[NSNumber numberWithInteger:arc4random() % 100]];
@@ -114,6 +116,8 @@
     data.inflexionPointStrokeColor = [UIColor redColor];
     data.inflexionPointFillColor = [UIColor greenColor];
     data.inflexionPointWidth = 6;
+    data.showDash = YES;
+    data.lineDashPattern = @[@1,@1];
     
     data.showPointLabel = YES;
     data.pointLabelFont = [UIFont systemFontOfSize:10];
@@ -128,7 +132,7 @@
     GBLineChartData *data1 = [GBLineChartData new];
     data1.lineAlpha = 1;
     data1.lineColor = [UIColor orangeColor];
-    data1.lineWidth = 3;
+    data1.lineWidth = 1;
     data1.itemCount = array1.count;
     data1.lineChartPointStyle = GBLineChartPointStyleSquare;
     data1.inflexionPointStrokeColor = [UIColor cyanColor];
@@ -137,7 +141,10 @@
     data1.showPointLabel = NO;
     data1.pointLabelFont = [UIFont systemFontOfSize:10];
     data1.pointLabelColor = [UIColor blackColor];
-    data1.pointLabelFormat = @"%.0f";
+    data1.pointLabelFormat = @"%1.0f";
+    data1.showGradientArea = YES;
+    data1.startGradientColor = [[UIColor yellowColor] colorWithAlphaComponent:0.6];
+    data1.endGradientColor = [[UIColor whiteColor] colorWithAlphaComponent:0.0];
     
     data1.dataGetter = ^GBLineChartDataItem *(NSInteger item) {
         
@@ -145,14 +152,11 @@
     };
     
     chart.lineChartDatas = @[data, data1];
-    chart.showGradientArea = YES;
-    chart.chartMarginLeft = 35;
-    
-    chart.startGradientColor = [[UIColor yellowColor] colorWithAlphaComponent:0.9];
-    chart.endGradientColor = [[UIColor whiteColor] colorWithAlphaComponent:0.0];
+    chart.chartMarginLeft = 25;
+
     chart.yLabelBlockFormatter = ^NSString *(CGFloat value) {
       
-        return [NSString stringWithFormat:@"%1.1f", value];
+        return [NSString stringWithFormat:@"%0.0f", value];
     };
     chart.showSmoothLines = YES;
     [chart strokeChart];

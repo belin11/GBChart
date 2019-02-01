@@ -9,7 +9,7 @@
 #import "GBLineChart.h"
 #import "GBLineChartData.h"
 
-@interface GBLineChart () <CAAnimationDelegate>
+@interface GBLineChart ()
 
 @property(nonatomic) NSMutableArray *chartLineArrayArray;  // Array Array[CAShapeLayer] save the line layer
 @property(nonatomic) NSMutableArray *chartPointArrayArray; // Array Array[CAShapeLayer] save the point layer
@@ -20,10 +20,8 @@
 @property (nonatomic) NSMutableArray *pointValueArrayArray;
 @property (nonatomic) NSMutableArray *pointLabelArrayArray;
 @property (nonatomic) NSMutableArray *yValueLabelArray;
-
-@property (nonatomic, strong) CAGradientLayer *gradientLayer;//渐变图形
-
-@property (nonatomic, strong) CAShapeLayer *maskLayer;
+@property (nonatomic) NSMutableArray *xValueLabelArray;
+@property (nonatomic) NSMutableArray *gradientLayerArray;
 
 @property (nonatomic, assign) CGFloat xStep;
 @property (nonatomic, assign) CGFloat yStep;
@@ -33,6 +31,16 @@
 @property (nonatomic) NSInteger yLabelNum;
 
 @property (nonatomic, strong) CAAnimation *strokeEndAnimation;
+
+/**
+ 坐标轴的高度
+ */
+@property (nonatomic) CGFloat chartCavanHeight;
+
+/**
+ 坐标轴的宽度
+ */
+@property (nonatomic) CGFloat chartCavanWidth;
 
 @end
 
@@ -55,7 +63,59 @@
     return self;
 }
 
+#pragma mark - 设置默认属性
+- (void)configDefaultValues {
+    
+    self.backgroundColor = [UIColor whiteColor];
+    self.clipsToBounds = YES;
+    self.chartLineArrayArray = [NSMutableArray new];
+    self.chartPointArrayArray = [NSMutableArray new];
+    self.pointPathArrayArray = [NSMutableArray new];
+    self.linePathArrayArray = [NSMutableArray new];
+    self.pointLabelArrayArray = [NSMutableArray new];
+    self.pointValueArrayArray = [NSMutableArray new];
+    self.yValueLabelArray = [NSMutableArray new];
+    self.xValueLabelArray = [NSMutableArray new];
+    self.gradientLayerArray = [NSMutableArray new];
+    
+    _displayAnimated = YES;
+    _showCoordinateAxis = YES;
+    _showYGridsLineDash = YES;
+    _showYLabels = YES;
+    _coordinateAxisLineWidth = 1;
+    _coordinateAxisColor = [UIColor darkGrayColor];
+    _xAxisColor = _coordinateAxisColor;
+    _yAxisColor = _coordinateAxisColor;
+    _showYGridsLine = YES;
+    _yGridsLineColor = [UIColor lightGrayColor];
+    _yGridsLineWidth = 1;
+    
+    _chartMarginLeft = 25.0;
+    _chartMarginRight = 25.0;
+    _chartMarginTop = 0.0;
+    _chartMarginBottom = 25.0;
+    
+    _xLabelColor = [UIColor grayColor];
+    _xLabelFont = [UIFont systemFontOfSize:10];
+    
+    _yLabelFont = [UIFont systemFontOfSize:10];
+    _yLabelColor = [UIColor grayColor];
+    
+    _yLabelFormat = @"%.0f";
+    
+    _chartCavanWidth = self.frame.size.width - _chartMarginLeft - _chartMarginRight;
+    _chartCavanHeight = self.frame.size.height - _chartMarginBottom - _chartMarginTop;
+}
+
+#pragma mark - setter方法
+- (void)setCoordinateAxisColor:(UIColor *)coordinateAxisColor {
+    _coordinateAxisColor = coordinateAxisColor;
+    _xAxisColor = coordinateAxisColor;
+    _yAxisColor = coordinateAxisColor;
+}
+
 #pragma mark - Public Method
+#pragma mark - 画图表
 - (void)strokeChart {
     
     [self calcuateChart];
@@ -63,9 +123,8 @@
     if (_showYLabels) {
         [self setYLabel];
     }
-    if (_showGradientArea) {
-        [self setGradientLayer];
-    }
+    [self setGradientLayer];
+
     [self populateChartLines];
     
     if (_displayAnimated) {
@@ -75,27 +134,15 @@
  
     [self setNeedsDisplay];
 }
+
 #pragma mark - 更新图表
-- (void)updateChartDatas:(NSArray *)data {
+- (void)updateChartDatas:(NSArray <GBLineChartData *> *)data {
     
     [self removeAllLayers];
     [self removeAllSubviews];
     [self removeAllObjects];
     _lineChartDatas = data;
-    [self calcuateChart];
-    if (_showYLabels) {
-        [self setYLabel];
-    }
-    if (_showGradientArea) {
-        [self setGradientLayer];
-    }
-    [self populateChartLines];
-    if (_displayAnimated) {
-        [self addAnimationIfNeeded];
-    }
-    
-    [self createPointLabel];
-    [self setNeedsDisplay];
+    [self strokeChart];
 }
 
 #pragma mark - 创建点Label
@@ -151,7 +198,6 @@
         ani.fromValue = @0;
         ani.toValue = @1;
         ani.duration = 1;
-        ani.delegate = self;
         _strokeEndAnimation= ani;
     }
     return _strokeEndAnimation;
@@ -160,10 +206,10 @@
 #pragma mark - 获取Y最大值最小值
 - (void)getYValueMaxAndYValueMin {
     
-    if (_YLabelTitles) {
-        _yValueMax = [_YLabelTitles.lastObject floatValue];
-        _yValueMin = [_YLabelTitles.firstObject floatValue];
-        _yLabelNum = _YLabelTitles.count;
+    if (_yLabelTitles) {
+        _yValueMax = [_yLabelTitles.lastObject floatValue];
+        _yValueMin = [_yLabelTitles.firstObject floatValue];
+        _yLabelNum = _yLabelTitles.count;
     } else {
         
         for (int i = 0; i < _lineChartDatas.count; i++) {
@@ -183,7 +229,11 @@
     
     [self getYValueMaxAndYValueMin];
 
-    _xStep = _chartCavanWidth/_XLabelTitles.count;
+    if (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis) {
+        _xStep = _chartCavanWidth/(_xLabelTitles.count-1);
+    } else {
+        _xStep = _chartCavanWidth/_xLabelTitles.count;
+    }
     _yStep = _chartCavanHeight/_yLabelNum;
     
     CGFloat yAxisMax = _chartCavanHeight + _chartMarginTop;
@@ -192,8 +242,9 @@
         GBLineChartData *chartData = _lineChartDatas[i];
         //点的数组
         NSMutableArray *pointValueArray = [NSMutableArray array];
-        for (int item = 0; item < chartData.itemCount; item++) {
-            CGFloat center_x = _chartMarginLeft + _xStep * item + _xStep/2;
+        for (NSInteger item = 0; item < chartData.itemCount; item++) {
+            
+            CGFloat center_x = _chartMarginLeft + _xStep * item + (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis? 0 : _xStep/2);
             CGFloat yValue1 = chartData.dataGetter(item).y;
             if (yValue1 < _yValueMin || yValue1 > _yValueMax) {
                 
@@ -225,7 +276,7 @@
         //点
         NSMutableArray *pointPathArray = [NSMutableArray array];
         for (int item = 0; item < chartData.itemCount; item++) {
-            CGFloat center_x = _chartMarginLeft + _xStep * item + _xStep/2;
+            CGFloat center_x = _chartMarginLeft + _xStep * item + (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis?0: _xStep/2);
             CGFloat center_y =  yAxisMax - (chartData.dataGetter(item).y-_yValueMin)/(_yValueMax-_yValueMin) * (_chartCavanHeight-_yStep);
             UIBezierPath *path = [UIBezierPath bezierPath];
             if (chartData.lineChartPointStyle == GBLineChartPointStyleCircle) {//圆
@@ -298,6 +349,9 @@
             line.strokeColor = [chartData.lineColor colorWithAlphaComponent:chartData.lineAlpha].CGColor;
             line.path = path.CGPath;
             line.fillColor = [UIColor clearColor].CGColor;
+            if (chartData.showDash) {
+                line.lineDashPattern = chartData.lineDashPattern;
+            }
             [self.layer addSublayer:line];
             [chartLineArray addObject:line];
         }
@@ -321,6 +375,7 @@
 }
 
 #pragma mark - 移除
+#pragma mark 移除所有layers
 - (void)removeAllLayers {
     
     for (NSArray <CALayer *> *layers in self.chartPointArrayArray) {
@@ -336,10 +391,15 @@
             [layer removeFromSuperlayer];
         }
     }
-    [_gradientLayer removeAllAnimations];
-    [_gradientLayer removeFromSuperlayer];
+
+    for (CALayer *layer in self.gradientLayerArray) {
+        [layer removeAllAnimations];
+        [layer removeFromSuperlayer];
+    }
+    
 }
 
+#pragma mark 移除所有subviews
 - (void)removeAllSubviews {
     
     for (NSArray <UILabel *> *views in _pointLabelArrayArray) {
@@ -350,8 +410,12 @@
     for (UILabel *label in _yValueLabelArray) {
         [label removeFromSuperview];
     }
+    for (UILabel *label in _xValueLabelArray) {
+        [label removeFromSuperview];
+    }
 }
 
+#pragma mark 移除所有数据
 - (void)removeAllObjects {
     
     [self.pointValueArrayArray removeAllObjects];
@@ -361,6 +425,7 @@
     [self.linePathArrayArray removeAllObjects];
     [self.pointPathArrayArray removeAllObjects];
     [self.yValueLabelArray removeAllObjects];
+    [self.xValueLabelArray removeAllObjects];
 }
 
 #pragma mark - 创建坐标轴的label
@@ -386,14 +451,15 @@
 - (void)setXLabel{
     
     //从左到右
-    for (int i = 0; i < _XLabelTitles.count; i++) {
+    for (int i = 0; i < _xLabelTitles.count; i++) {
         UILabel *label = [[UILabel alloc] initWithFrame:[self frameForXLabelAtIndex:i]];
         label.font = _xLabelFont;
         label.textColor = _xLabelColor;
-        label.text = _XLabelTitles[i];
+        label.text = _xLabelTitles[i];
         label.textAlignment = NSTextAlignmentCenter;
-        label.transform = CGAffineTransformMakeRotation(_XLabelRotationAngle);
+        label.transform = CGAffineTransformMakeRotation(_xLabelRotationAngle);
         [self addSubview:label];
+        [self.xValueLabelArray addObject:label];
     }
 }
 
@@ -403,6 +469,9 @@
     for (int i = 0; i < _pointValueArrayArray.count; i++) {
         
         NSMutableArray *pointValueArray = _pointValueArrayArray[i];
+        if (!_lineChartDatas[i].showGradientArea) {
+            continue;
+        }
         CGPoint startPoint = [pointValueArray[0] CGPointValue];
         startPoint = CGPointMake(startPoint.x-_xStep, startPoint.y);
         CGPoint endPoint = [pointValueArray.lastObject CGPointValue];
@@ -454,12 +523,12 @@
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = self.bounds;
         [self.layer addSublayer:gradientLayer];
-        gradientLayer.colors = @[(__bridge id)_startGradientColor.CGColor, (__bridge id)_endGradientColor.CGColor];
+        gradientLayer.colors = @[(__bridge id)_lineChartDatas[i].startGradientColor.CGColor, (__bridge id)_lineChartDatas[i].endGradientColor.CGColor];
         gradientLayer.startPoint = CGPointMake(0.5, 0);
         gradientLayer.endPoint = CGPointMake(0.5, 1);
         gradientLayer.mask = maskLayer;
         gradientLayer.zPosition = -10;
-        _gradientLayer = gradientLayer;
+        [self.gradientLayerArray addObject:gradientLayer];
         
         CABasicAnimation *ani = [CABasicAnimation animationWithKeyPath:@"opacity"];
         ani.fromValue = @0;
@@ -479,20 +548,26 @@
     CGFloat y = yAxisMax - index* _yLabelHeight - _yLabelHeight/2;
     return CGRectMake(x, y, w, _yLabelHeight);
 }
+
 - (CGRect)frameForXLabelAtIndex:(NSInteger)index {
     
     CGFloat yAxisMax = _chartCavanHeight + _chartMarginTop;
-    _xLabelWidth = _chartCavanWidth/_XLabelTitles.count;
+    _xLabelWidth = [self getMaxXLabelWidth];
     CGFloat h = _chartMarginBottom;
-    CGFloat  x = _chartMarginLeft + index * _xLabelWidth;
+    CGFloat x = 0;
     CGFloat y = yAxisMax;
+    if (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis) {
+        x = _chartMarginLeft + index * _xStep - _xStep/2;
+    } else{
+        x = _chartMarginLeft + index * _xStep;
+    }
     return CGRectMake(x, y, _xLabelWidth, h);
 }
 
 - (CGFloat)getMaxXLabelWidth {
     
-    CGFloat width = _chartCavanWidth/_XLabelTitles.count;
-    for (NSString *text in _XLabelTitles) {
+    CGFloat width = _chartCavanWidth/_xLabelTitles.count;
+    for (NSString *text in _xLabelTitles) {
         CGFloat tempW = [text sizeWithAttributes:@{NSFontAttributeName : _xLabelFont}].width;
         width = MAX(width, tempW);
     }
@@ -530,46 +605,6 @@
     ctrl2_y = ym2 + (yc2 - ym2) * smooth_value + y2 - ym2;
     [path addCurveToPoint:CGPointMake(x2, y2) controlPoint1:CGPointMake(ctrl1_x, ctrl1_y) controlPoint2:CGPointMake(ctrl2_x, ctrl2_y)];
 }
-
-#pragma mark - 设置默认属性
-- (void)configDefaultValues {
-    
-    self.backgroundColor = [UIColor whiteColor];
-    self.clipsToBounds = YES;
-    self.chartLineArrayArray = [NSMutableArray new];
-    self.chartPointArrayArray = [NSMutableArray new];
-    self.pointPathArrayArray = [NSMutableArray new];
-    self.linePathArrayArray = [NSMutableArray new];
-    self.pointLabelArrayArray = [NSMutableArray new];
-    self.pointValueArrayArray = [NSMutableArray new];
-    self.yValueLabelArray = [NSMutableArray new];
-
-    _displayAnimated = YES;
-    _showCoordinateAxis = YES;
-    _showYLabels = YES;
-    _coordinateAxisLineWidth = 1;
-    _coordinateAxisColor = [UIColor blackColor];
-    
-    _showYGridsLine = YES;
-    _yGridsLineColor = [UIColor grayColor];
-    _yGridsLineWidth = 1;
-    
-    _chartMarginLeft = 25.0;
-    _chartMarginRight = 25.0;
-    _chartMarginTop = 25.0;
-    _chartMarginBottom = 25.0;
-    
-    _xLabelColor = [UIColor blackColor];
-    _xLabelFont = [UIFont systemFontOfSize:10];
-    _yLabelFont = [UIFont systemFontOfSize:10];
-    _yLabelColor = [UIColor blackColor];
-    
-    _yLabelFormat = @"%1.0f";
-    
-    _chartCavanWidth = self.frame.size.width - _chartMarginLeft - _chartMarginRight;
-    _chartCavanHeight = self.frame.size.height - _chartMarginBottom - _chartMarginTop;
-}
-
 #pragma mark - 绘制
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
@@ -581,51 +616,67 @@
         
         //画坐标轴
         CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGContextSetStrokeColorWithColor(ctx, _coordinateAxisColor.CGColor);
         CGContextSetLineWidth(ctx, _coordinateAxisLineWidth);
+        
+        CGContextSetStrokeColorWithColor(ctx, _yAxisColor.CGColor);
+        //画y轴三角形
         CGContextMoveToPoint(ctx, _chartMarginLeft, _chartMarginTop);
         CGContextAddLineToPoint(ctx, _chartMarginLeft-3, _chartMarginTop+5);
         CGContextMoveToPoint(ctx, _chartMarginLeft, _chartMarginTop);
         CGContextAddLineToPoint(ctx, _chartMarginLeft+3, _chartMarginTop+5);
+
+        //画y轴线
         CGContextMoveToPoint(ctx, _chartMarginLeft, _chartMarginTop);
         CGContextAddLineToPoint(ctx, _chartMarginLeft, yAxisMax);
+        
+        //绘制y轴分割点
+        for (int i = 0; i < _yLabelNum; i++) {
+            
+            CGFloat y = _chartMarginTop + _yStep * i + _yStep;
+            CGContextMoveToPoint(ctx, _chartMarginLeft+3, y);
+            CGContextAddLineToPoint(ctx, _chartMarginLeft-2, y);
+        }
+        
+        CGContextStrokePath(ctx);
+
+        CGContextSetStrokeColorWithColor(ctx, _xAxisColor.CGColor);
+        //画x轴三角形
+        CGContextMoveToPoint(ctx, _chartMarginLeft, yAxisMax);
         CGContextAddLineToPoint(ctx, xAxisMax, yAxisMax);
         CGContextAddLineToPoint(ctx, xAxisMax-5, yAxisMax-3);
+        //画x轴线
         CGContextMoveToPoint(ctx, xAxisMax, yAxisMax);
         CGContextAddLineToPoint(ctx, xAxisMax-5, yAxisMax+3);
         
-        //绘制分割点
-        for (int i = 0; i < _XLabelTitles.count; i++) {
-            CGFloat yStep = _chartCavanWidth/_XLabelTitles.count;
-            CGFloat x = _chartMarginLeft + i * yStep + yStep/2;
-            CGFloat y = _chartCavanHeight + _chartMarginTop;
+        //绘制x轴分割点
+        CGFloat y = _chartCavanHeight + _chartMarginTop;
+        for (NSInteger i = 0; i < _xLabelTitles.count; i++) {
+            CGFloat x = _chartMarginLeft + (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis ? 0 : _xStep/2) + i * _xStep;
             CGContextMoveToPoint(ctx, x, y-3);
             CGContextAddLineToPoint(ctx, x, y);
         }
-        
-        for (int i = 0; i < _yLabelNum; i++) {
-            
-            CGFloat yStep = _chartCavanHeight/_yLabelNum;
-            CGFloat x = _chartMarginLeft;
-            CGFloat y = _chartMarginTop + yStep * i + yStep;
-            CGContextMoveToPoint(ctx, x+3, y);
-            CGContextAddLineToPoint(ctx, x-2, y);
-        }
         CGContextStrokePath(ctx);
-        }
+    }
     
     if (_showYGridsLine) {
         //绘制横线
         CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGFloat eachSectionHeight = (_chartCavanHeight - _yLabelHeight) / (_yLabelNum-1);
         CGContextSetStrokeColorWithColor(ctx, _yGridsLineColor.CGColor);
         CGContextSetLineWidth(ctx, _yGridsLineWidth);
-        CGFloat dash[] = {3,3};
-        CGContextSetLineDash(ctx, 0.0, dash, 2);
-        for (int i = 0; i < 5; i++) {
+        if (_showYGridsLineDash) {
+            CGFloat dash[] = {3,3};
             
-            CGContextMoveToPoint(ctx, _chartMarginLeft, yAxisMax - eachSectionHeight * (i+1));
-            CGContextAddLineToPoint(ctx, xAxisMax, yAxisMax - eachSectionHeight * (i+1));
+            CGContextSetLineDash(ctx, 0.0, dash, 2  );
+        }
+    
+        NSInteger index= 0;
+        if (_showCoordinateAxis) {
+            index = 1;
+        }
+        for (NSInteger i = index; i < _yLabelNum; i++) {
+            
+            CGContextMoveToPoint(ctx, _chartMarginLeft, yAxisMax - _yStep * i);
+            CGContextAddLineToPoint(ctx, xAxisMax, yAxisMax - _yStep * i);
             CGContextStrokePath(ctx);
         }
     }

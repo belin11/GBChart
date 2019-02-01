@@ -10,10 +10,11 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, GBLineChartPointStyle) {
+    
     GBLineChartPointStyleNone = 0,
-    GBLineChartPointStyleCircle = 1,
-    GBLineChartPointStyleSquare = 3,
-    GBLineChartPointStyleTriangle = 4
+    GBLineChartPointStyleCircle = 1, //圆形
+    GBLineChartPointStyleSquare = 2, //方形
+    GBLineChartPointStyleTriangle = 3, //三角形
 };
 
 @interface GBLineChartDataItem : NSObject
@@ -40,11 +41,20 @@ typedef GBLineChartDataItem * (^GBLineChartDataGetter)(NSInteger item);
 @property (nonatomic, strong) UIFont *pointLabelFont;
 @property (nonatomic, strong) NSString *pointLabelFormat;
 
+@property (nonatomic, assign) BOOL showDash;
+@property (nonatomic, strong) NSArray <NSNumber *> *lineDashPattern;
 
 @property (nonatomic, assign) GBLineChartPointStyle lineChartPointStyle;
 @property (nonatomic, assign) CGFloat inflexionPointWidth;
 @property (nonatomic, strong) UIColor *inflexionPointFillColor;
 @property (nonatomic, strong) UIColor *inflexionPointStrokeColor;
 
+//渐变区域
+/** 是否显示折线围成的渐变区域 */
+@property (nonatomic, assign) BOOL showGradientArea;
+/** 渐变开始的颜色 */
+@property (nonatomic, strong) UIColor *startGradientColor;
+/** 渐变结束的颜色 */
+@property (nonatomic, strong) UIColor *endGradientColor;
 
 @end
