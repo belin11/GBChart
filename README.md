@@ -27,7 +27,7 @@
 
 实现步骤很清晰，看上去不难，其实里面有很多细节需要调整和优化，比较花时间。
 
-####3.如何使用
+#### 3.如何使用
 那我直接上代码，这样就一目了然，使用起来还是很简单的
 ```
     GBLineChart *chart = [[GBLineChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.bounds), 220)];
