@@ -30,6 +30,8 @@
 @property (nonatomic) CGFloat yValueMin;
 @property (nonatomic) NSInteger yLabelNum;
 
+@property (nonatomic, assign) CGPoint targetPoint;
+
 @property (nonatomic, strong) CAAnimation *strokeEndAnimation;
 
 /**
@@ -106,6 +108,9 @@
     _showVerticalLine = NO;
     _verticalLineWidth = 1;
     _verticalLineColor = [UIColor blackColor];
+    
+    _chartCavanWidth = self.frame.size.width - _chartMarginLeft - _chartMarginRight;
+    _chartCavanHeight = self.frame.size.height - _chartMarginBottom - _chartMarginTop;
 }
 
 #pragma mark - setter方法
@@ -132,9 +137,8 @@
         [self addAnimationIfNeeded];
     }
     [self createPointLabel];
-    if (_showVerticalLine) {
-        [self strokeVerticalLine];
-    }
+    
+    [self strokeVerticalLine];
  
     [self setNeedsDisplay];
 }
@@ -143,9 +147,9 @@
 - (void)strokeVerticalLine {
     
     UIBezierPath *path = [UIBezierPath bezierPath];
-    CGFloat x = [self getXPointWithXValue:_verticalLineXValue item:0];
+    CGFloat x = [self getXPointWithXValue:_verticalLineXValue];
     [path moveToPoint:CGPointMake(x, _chartMarginTop+_chartCavanHeight)];
-    [path addLineToPoint:CGPointMake(x, _chartMarginTop)];
+    [path addLineToPoint:CGPointMake(x, _chartCavanHeight/_yLabelNum)];
     
     CAShapeLayer *layer = [CAShapeLayer layer];
     layer.strokeColor = _verticalLineColor.CGColor;
@@ -155,24 +159,12 @@
 }
 
 #pragma mark - 获取x方向的坐标
-- (CGFloat)getXPointWithXValue:(CGFloat)xValue item:(NSInteger)item{
-    
-    CGFloat x;
-    if (xValue == 0) {
-        
-        if (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis) {
-            
-            x = _chartMarginLeft + item*_xStep;
-        } else {
-            x = _chartMarginLeft  + _xStep/2 + item*_xStep;
-        }
-        return x;
-    }
+- (CGFloat)getXPointWithXValue:(CGFloat)xValue {
     
     CGFloat xMaxValue = [_xLabelTitles.lastObject floatValue];
     CGFloat xMinValue = [_xLabelTitles.firstObject floatValue];
     
-
+    CGFloat x;
     if (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis) {
         CGFloat position = (xValue-xMinValue) / (xMaxValue-xMinValue)* _chartCavanWidth;
         x = _chartMarginLeft + position;
@@ -276,9 +268,6 @@
 #pragma mark - 计算
 - (void)calcuateChart {
     
-    _chartCavanWidth = self.frame.size.width - _chartMarginLeft - _chartMarginRight;
-    _chartCavanHeight = self.frame.size.height - _chartMarginBottom - _chartMarginTop;
-    
     [self getYValueMaxAndYValueMin];
 
     if (_xLabelAlignmentStyle == GBXLabelAlignmentStyleFullXAxis) {
@@ -286,7 +275,7 @@
     } else {
         _xStep = _chartCavanWidth/_xLabelTitles.count;
     }
-    _yStep = _chartCavanHeight/(_yLabelNum-1);
+    _yStep = _chartCavanHeight/_yLabelNum;
     
     CGFloat yAxisMax = _chartCavanHeight + _chartMarginTop;
     for (int i = 0; i < _lineChartDatas.count; i++) {
@@ -296,8 +285,7 @@
         NSMutableArray *pointValueArray = [NSMutableArray array];
         for (NSInteger item = chartData.startIndex; item < chartData.itemCount+chartData.startIndex; item++) {
             ///点的横坐标
-        
-            CGFloat center_x = [self getXPointWithXValue:chartData.dataGetter(item).x item:item];
+            CGFloat center_x = [self getXPointWithXValue:chartData.dataGetter(item).x];
             
             CGFloat yValue1 = chartData.dataGetter(item).y;
             if (yValue1 < _yValueMin || yValue1 > _yValueMax) {
@@ -313,7 +301,7 @@
         //点
         NSMutableArray *pointPathArray = [NSMutableArray array];
         for (NSInteger item = chartData.startIndex; item < chartData.itemCount+chartData.startIndex; item++) {
-            CGFloat center_x = [self getXPointWithXValue:chartData.dataGetter(item).x item:item];
+            CGFloat center_x = [self getXPointWithXValue:chartData.dataGetter(item).x];
             CGFloat center_y =  yAxisMax - (chartData.dataGetter(item).y-_yValueMin)/(_yValueMax-_yValueMin) * (_chartCavanHeight-_yStep);
             UIBezierPath *path = [UIBezierPath bezierPath];
             if (chartData.lineChartPointStyle == GBLineChartPointStyleCircle) {//圆
@@ -345,16 +333,9 @@
             if (pointValueArray.count==0) {
                 continue;
             }
-            CGPoint startPoint;
-            CGPoint endPoint;
-//            if (i == 0) {
-//                startPoint = [pointValueArray[0] CGPointValue];
-//            } else{
-////                startPoint = [pointValueArray];
-//            }
-            
+            CGPoint startPoint = [pointValueArray[0] CGPointValue];
             startPoint = CGPointMake(startPoint.x-_xStep, startPoint.y);
-            endPoint = [pointValueArray.lastObject CGPointValue];
+            CGPoint endPoint = [pointValueArray.lastObject CGPointValue];
             endPoint = CGPointMake(endPoint.x+_xStep, endPoint.y);
             [pointValueArray insertObject:[NSValue valueWithCGPoint:startPoint] atIndex:0];
             [pointValueArray addObject:[NSValue valueWithCGPoint:endPoint]];
@@ -406,6 +387,12 @@
     
 #endif 
 }
+
+- (CGFloat)valueForBezierWithP0:(CGFloat)P0 P1:(CGFloat)P1 P2:(CGFloat)P2 P3:(CGFloat)P3 t:(CGFloat)t {
+    
+    return powf(1-t, 3)*P0 + 3*t*powf((1-t), 2)*P1 + 3*powf(t, 2)*(t-t)*P2 + powf(t, 3)*P3;
+}
+
 #pragma mark - 布局折线
 - (void)populateChartLines {
     //线

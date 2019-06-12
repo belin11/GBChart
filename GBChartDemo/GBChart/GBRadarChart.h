@@ -30,28 +30,28 @@
  
  @param chartData 模型数组
  */
-- (void)updateChartWithChartData:(NSArray *)chartData;
+- (void)updateChartWithChartData:(NSArray <GBRadarChartDataItem *> *)chartData;
 
 /** Array of `RadarChartDataItem` objects, one for each corner. */
-@property (nonatomic) NSArray <GBRadarChartDataItem *> *chartData;
+@property (nonatomic, strong) NSArray <GBRadarChartDataItem *> *chartDataItems;
 /** The unit of this chart ,default is 1 */
-@property (nonatomic) CGFloat valueDivider;
+@property (nonatomic, assign) CGFloat valueDivider;
 /** The maximum for the range of values to display on the chart */
-@property (nonatomic) CGFloat maxValue;
+@property (nonatomic, assign) CGFloat maxValue;
 /** Default is gray. */
-@property (nonatomic) UIColor *webColor;
+@property (nonatomic, strong) UIColor *webColor;
 /** Default is green , with an alpha of 0.7 */
-@property (nonatomic) UIColor *plotFillColor;
+@property (nonatomic, strong) UIColor *plotFillColor;
 /** Default is green*/
-@property (nonatomic) UIColor *plotStrokeColor;
+@property (nonatomic, strong) UIColor *plotStrokeColor;
 /** Default is black */
-@property (nonatomic) UIColor *fontColor;
+@property (nonatomic, strong) UIColor *fontColor;
 /** Default is orange */
-@property (nonatomic) UIColor *graduationColor;
+@property (nonatomic, strong) UIColor *graduationColor;
 /** Default is 12 */
-@property (nonatomic) CGFloat fontSize;
+@property (nonatomic, assign) CGFloat titleFontSize;
 /** Tap the label will display detail value ,default is YES. */
-@property (nonatomic, assign) BOOL isLabelTouchable;
+@property (nonatomic, assign) BOOL canLabelTouchable;
 /** is show graduation on the chart ,default is NO. */
 @property (nonatomic, assign) BOOL isShowGraduation;
 /** is display animated, default is YES */

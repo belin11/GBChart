@@ -22,7 +22,7 @@
     
     if (value < 0) {
         value = 0;
-        NSLog(@"Value value can not be negative");
+        NSLog(@"Value can not be negative");
     }
     _value = value;
 

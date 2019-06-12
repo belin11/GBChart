@@ -25,8 +25,6 @@ typedef NS_ENUM(NSUInteger, GBLineChartPointStyle) {
 
 + (id)dataItemWithY:(CGFloat)Y X:(CGFloat)X;
 
-+ (id)dataItemWithY:(CGFloat)Y;
-
 @end
 
 typedef GBLineChartDataItem * (^GBLineChartDataGetter)(NSInteger item);

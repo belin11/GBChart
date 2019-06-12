@@ -18,8 +18,9 @@
 @property (nonatomic) UILabel *detailLabel;//
 @property (nonatomic) CGFloat lengthUnit;//每个单元的长度
 @property (nonatomic) CAShapeLayer *chartPlot;
-@property (nonatomic) NSMutableArray <UILabel *> *titleLabels;
+@property (nonatomic) NSMutableArray <UILabel *> *titleLabels; //各元素的label数组
 @property (nonatomic) NSInteger tapTag;//点击的标签
+@property (nonatomic, strong) NSMutableArray <UILabel *> *graduationLabels;
 
 @end
 
@@ -29,13 +30,14 @@
     
     if (self = [super initWithFrame:frame]) {
         
-        _chartData = items;
+        _chartDataItems = items;
         _valueDivider = unitValue;
         [self configDefaultValues];
     }
     return self;
 }
 
+#pragma mark - 配置默认的数据
 - (void)configDefaultValues {
     
     self.backgroundColor = [UIColor whiteColor];
@@ -45,8 +47,8 @@
     _plotStrokeColor = [UIColor colorWithRed:.4 green:.8 blue:.4 alpha:1.0];
     _fontColor = [UIColor blackColor];
     _graduationColor = [UIColor orangeColor];
-    _fontSize = 12;
-    _isLabelTouchable = YES;
+    _titleFontSize = 12;
+    _canLabelTouchable = YES;
     _isShowGraduation = NO;
     _displayAnimated = YES;
     //私有变量
@@ -55,6 +57,7 @@
     _pointsToWebArrayArray = [NSMutableArray array];
     _pointsToPlotArray = [NSMutableArray array];
     _titleLabels = [NSMutableArray array];
+    _graduationLabels = [NSMutableArray array];
     _lengthUnit = 0;
     _chartPlot = [CAShapeLayer layer];
     _chartPlot.lineCap = kCALineCapButt;
@@ -72,37 +75,32 @@
     [self addSubview:_detailLabel];
 }
 
-#pragma mark - 计算要绘制的点
+#pragma mark - 计算所有绘制的点
 - (void)calculateChartPoints {
-    
-    [self.pointsToPlotArray removeAllObjects];
-    [self.pointsToWebArrayArray removeAllObjects];
-    [_chartPlot removeAllAnimations];
-    for (UILabel*l in self.titleLabels) {
-        [l removeFromSuperview];
-    }
-    [self.titleLabels removeAllObjects];
     
     NSMutableArray *values = [NSMutableArray array];
     NSMutableArray *descriptions = [NSMutableArray array];
     NSMutableArray *angles = [NSMutableArray array];
-    for (int i = 0; i < _chartData.count; i++) {
+    for (int i = 0; i < _chartDataItems.count; i++) {
         
-        GBRadarChartDataItem *item = _chartData[i];
+        GBRadarChartDataItem *item = _chartDataItems[i];
         [values addObject:@(item.value)];
         [descriptions addObject:item.textDescription];
-        CGFloat angleValue = i * M_PI*2/_chartData.count;
+        //调整起始角度在这里
+        CGFloat angleValue = i * M_PI*2/_chartDataItems.count;
         [angles addObject:@(angleValue)];
     }
+    //获取最大的值
     _maxValue = [self getMaxValueFromValues:values];
-    //总共有多少个圆圈
+    //总共有多少个多边形
     NSInteger plotCircles = _maxValue/_valueDivider;
     //计算折线图从圆点到顶点的最大的长度
     CGFloat maxWidthOfLabel = [self getMaxWidthForLabelFrom:descriptions];
-    CGFloat maxLength = ceil(MIN(_centerX, _centerY) - maxWidthOfLabel);
+    //多边形中心至端点最大的长度
+    CGFloat maxLength = ceil(MIN(_centerX, _centerY) - ceil(maxWidthOfLabel));
     NSLog(@"maxLength = %f", maxLength);
-    //每一段的平均长度
-    _lengthUnit = maxLength/plotCircles;
+    //每相邻两个多边形至中心的长度差
+    _lengthUnit = floor(maxLength/plotCircles);
     //总共的长度数组
     NSArray *lengthArray = [self getLengthArrayWithCircleNum:plotCircles];
     //获取所有的点
@@ -116,7 +114,7 @@
     [self createLabelWithMaxLength:maxLength descriptions:descriptions angleArray:angles];
 }
 
-#pragma mark - 获取折线图的点
+#pragma mark - 获取各个多边形的端点
 - (NSMutableArray *)getPlotPointsArrayWithValues:(NSArray *)values angles:(NSArray *)angles {
     NSMutableArray *array = [NSMutableArray array];
     for (int i = 0; i < values.count; i++) {
@@ -137,7 +135,7 @@
     for (int i = 0; i < descriptions.count; i++) {
         NSString *desc = descriptions[i];
         
-        CGFloat w = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_fontSize]}].width;
+        CGFloat w = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_titleFontSize]}].width;
         maxWidth = MAX(maxWidth, w);
     }
     return maxWidth;
@@ -177,7 +175,7 @@
     }
     CGRect frame = label.frame;
     _detailLabel.hidden = !_detailLabel.hidden;
-    _detailLabel.text = [NSString stringWithFormat:@"%.2f",_chartData[tag].value];
+    _detailLabel.text = [NSString stringWithFormat:@"%.2f",_chartDataItems[tag].value];
     
     CGSize size = [_detailLabel.text sizeWithAttributes:@{NSFontAttributeName: _detailLabel.font}];
     size = CGSizeMake(size.width + 5, size.height + 2);
@@ -191,17 +189,17 @@
     for (NSString *desc in descriptions) {
         UILabel *label = [UILabel new];
         label.textColor = _fontColor;
-        label.font = [UIFont systemFontOfSize:_fontSize];
+        label.font = [UIFont systemFontOfSize:_titleFontSize];
         [self addSubview:label];
         [self.titleLabels addObject:label];
-        if (_isLabelTouchable) {
+        if (_canLabelTouchable) {
             label.userInteractionEnabled = YES;
             label.tag = section;
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLabel:)];
             [label addGestureRecognizer:tap];
         }
         label.text = desc;
-        CGSize size = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_fontSize]}];
+        CGSize size = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_titleFontSize]}];
         CGFloat angleValue = [angleArray[section] floatValue];
         CGFloat x = _centerX + maxLength*sin(angleValue);
         CGFloat y = _centerY + maxLength*cos(angleValue);
@@ -254,13 +252,14 @@
         [self addAnimationIfNeeded];
     }
     if (_isShowGraduation) {
-        [self showGraduation];
+        [self showGraduationIfNeeded];
     }
 }
 
 #pragma mark - 显示刻度label
-- (void)showGraduation {
+- (void)showGraduationIfNeeded {
     
+    CGSize size = [[NSString stringWithFormat:@"%.f", _maxValue] sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11] }];
     for (int i = 1; i <= _pointsToWebArrayArray.count; i++) {
         
         CGPoint point = [_pointsToWebArrayArray[i-1][0] CGPointValue];
@@ -268,15 +267,33 @@
         label.font = [UIFont systemFontOfSize:11];
         label.textColor = _graduationColor;
         label.text = [NSString stringWithFormat:@"%.0f", _valueDivider*i];
-        label.frame = CGRectMake(point.x, point.y-6, 20, 12);
+        label.frame = CGRectMake(point.x, point.y-size.height/2, size.width, size.height);
         [self addSubview:label];
+        [self.graduationLabels addObject:label];
     }
+}
+
+#pragma mark - 移除所有的数据
+- (void)removeAllData {
+    
+    [self.pointsToPlotArray removeAllObjects];
+    [self.pointsToWebArrayArray removeAllObjects];
+    [_chartPlot removeAllAnimations];
+    for (UILabel*l in self.titleLabels) {
+        [l removeFromSuperview];
+    }
+    [self.titleLabels removeAllObjects];
+    for (UILabel *l in self.graduationLabels) {
+        [l removeFromSuperview];
+    }
+    [self.graduationLabels removeAllObjects];
 }
 
 #pragma mark - 更新图表
 - (void)updateChartWithChartData:(NSArray *)chartData {
     
-    _chartData = chartData;
+    [self removeAllData];
+    _chartDataItems = chartData;
     [self strokeChart];
 }
 
@@ -324,11 +341,12 @@
     [super drawRect:rect];
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    //设置画笔属性
     CGContextSetStrokeColorWithColor(ctx, _webColor.CGColor);
     CGContextSetFillColorWithColor(ctx, [UIColor clearColor].CGColor);
     CGContextSetLineWidth(ctx, 1);
     CGContextSetLineJoin(ctx, kCGLineJoinRound);
-    
+    //绘制多重等边多边形
     for (int i = 0; i < _pointsToWebArrayArray.count; i++) {
         NSArray *pointToWebArray = _pointsToWebArrayArray[i];
         for (int j = 0; j < pointToWebArray.count; j++) {
@@ -340,8 +358,8 @@
         }
         CGContextClosePath(ctx);
     }
-    
-    NSArray *lastPointsToWebArray = _pointsToWebArrayArray.lastObject;
+    //绘制从中心点到端点的线段，数量等于多边形边数
+    NSArray <NSValue *> *lastPointsToWebArray = _pointsToWebArrayArray.lastObject;
     for (int i = 0; i < lastPointsToWebArray.count; i++) {
         
         CGPoint point = [lastPointsToWebArray[i] CGPointValue];

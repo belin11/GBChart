@@ -18,11 +18,6 @@
     return item;
 }
 
-+ (id)dataItemWithY:(CGFloat)Y {
-    
-    return [self dataItemWithY:Y X:0];
-}
-
 @end
 
 @implementation GBLineChartData
