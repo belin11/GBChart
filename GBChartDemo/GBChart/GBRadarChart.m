@@ -53,6 +53,7 @@
     _canLabelTouchable = YES;
     _isShowGraduation = NO;
     _displayAnimated = YES;
+    _clockwise = YES;
     //私有变量
     _centerX = self.bounds.size.width/2;
     _centerY = self.bounds.size.height/2;
@@ -89,7 +90,7 @@
         [values addObject:@(item.value)];
         [descriptions addObject:item.textDescription];
         // !!!: 调整起始角度在这里
-        CGFloat angleValue = M_PI - i * M_PI*2/_chartDataItems.count;
+        CGFloat angleValue = _clockwise? (M_PI - i * M_PI*2/_chartDataItems.count) : (-M_PI + i * M_PI*2/_chartDataItems.count);
         [angles addObject:@(angleValue)];
     }
     //获取最大的值
@@ -211,7 +212,7 @@
         } else if (angleValue > 0 && angleValue < 180) {
             
             y -= size.height/2;
-        } else if (angleValue == 180) {
+        } else if (angleValue == 180 || angleValue == -180) {
             
             x -= size.width/2;
             y -= size.height;

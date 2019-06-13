@@ -92,8 +92,8 @@
 - (void)radarChart {
     
     NSMutableArray *items = [NSMutableArray array];
-    NSArray *values = @[@100,@50,@70,@30,@50,@40,@45,@80];
-    NSArray *descs = @[@"苹果",@"香蕉",@"花生",@"橙子",@"车",@"奶子",@"房子",@"票子"];
+    NSArray *values = @[@100,@50,@70,@30,@50,@40,@45,];
+    NSArray *descs = @[@"苹果",@"香蕉",@"花生",@"橙子",@"车",@"奶子",@"房子",];
     for (int i = 0; i < values.count; i++) {
         
         GBRadarChartDataItem *item = [GBRadarChartDataItem dataItemWithValue:[values[i] floatValue] description:descs[i]];
