@@ -23,6 +23,8 @@
 @property (nonatomic, strong) NSMutableArray <UILabel *> *graduationLabels;
 
 @end
+//距离边缘的的长度
+#define kSpaceToMargin 20
 
 @implementation GBRadarChart
 
@@ -86,8 +88,8 @@
         GBRadarChartDataItem *item = _chartDataItems[i];
         [values addObject:@(item.value)];
         [descriptions addObject:item.textDescription];
-        //调整起始角度在这里
-        CGFloat angleValue = i * M_PI*2/_chartDataItems.count;
+        // !!!: 调整起始角度在这里
+        CGFloat angleValue = M_PI - i * M_PI*2/_chartDataItems.count;
         [angles addObject:@(angleValue)];
     }
     //获取最大的值
@@ -97,8 +99,7 @@
     //计算折线图从圆点到顶点的最大的长度
     CGFloat maxWidthOfLabel = [self getMaxWidthForLabelFrom:descriptions];
     //多边形中心至端点最大的长度
-    CGFloat maxLength = ceil(MIN(_centerX, _centerY) - ceil(maxWidthOfLabel));
-    NSLog(@"maxLength = %f", maxLength);
+    CGFloat maxLength = ceil(MIN(_centerX, _centerY) - ceil(maxWidthOfLabel)) - kSpaceToMargin;
     //每相邻两个多边形至中心的长度差
     _lengthUnit = floor(maxLength/plotCircles);
     //总共的长度数组
@@ -182,7 +183,7 @@
     _detailLabel.frame = CGRectMake(frame.origin.x, frame.origin.y- size.height -4, size.width, size.height);
 }
 
-#pragma mark - 创建label
+#pragma mark - 创建并显示titleLabel
 - (void)createLabelWithMaxLength:(CGFloat)maxLength descriptions:(NSArray *)descriptions angleArray:(NSArray *)angleArray {
     
     NSInteger section = 0;
@@ -200,33 +201,35 @@
         }
         label.text = desc;
         CGSize size = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_titleFontSize]}];
-        CGFloat angleValue = [angleArray[section] floatValue];
-        CGFloat x = _centerX + maxLength*sin(angleValue);
-        CGFloat y = _centerY + maxLength*cos(angleValue);
+        CGFloat angle = [angleArray[section] floatValue];
+        CGFloat x = _centerX + maxLength*sinf(angle);
+        CGFloat y = _centerY + maxLength*cosf(angle);
+        NSInteger angleValue = (NSInteger)roundf(angle*180/M_PI);
+        NSLog(@"angleValue: %ld", angleValue);
         if (angleValue == 0) {
             x -= size.width/2;
-        } else if (angleValue > 0 && angleValue < M_PI_2) {
-
-        } else if (angleValue == M_PI_2) {
+        } else if (angleValue > 0 && angleValue < 180) {
+            
             y -= size.height/2;
-        } else if (angleValue > M_PI_2 && angleValue < M_PI) {
-            y -= size.height;
-        } else if (angleValue - M_PI < 0.01) {
+        } else if (angleValue == 180) {
             
             x -= size.width/2;
             y -= size.height;
-        } else if (angleValue > M_PI && angleValue < 1.5 * M_PI) {
+        } else if (angleValue < 0 && angleValue > -180) {
             
             x -= size.width;
-            y -= size.height;
-        } else if (angleValue - 1.5 * M_PI < 0.01) {
-            x -= size.width;
             y -= size.height/2;
-        } else {
-        
-            x -= size.width;
         }
         label.frame = CGRectMake(x, y, size.width, size.height);
+        switch (_labelStyle) {
+            case GBRadarChartLabelStyleCircle:
+                label.transform = CGAffineTransformMakeRotation(M_PI-angle);
+                break;
+            case GBRadarChartLabelStyleHorizontal:
+                label.transform = CGAffineTransformIdentity;
+            case GBRadarChartLabelStyleHidden:
+                label.hidden = YES;
+        }
         section++;
     }
 }
@@ -267,7 +270,7 @@
         label.font = [UIFont systemFontOfSize:11];
         label.textColor = _graduationColor;
         label.text = [NSString stringWithFormat:@"%.0f", _valueDivider*i];
-        label.frame = CGRectMake(point.x, point.y-size.height/2, size.width, size.height);
+        label.frame = CGRectMake(point.x+2, point.y-size.height/2, size.width, size.height);
         [self addSubview:label];
         [self.graduationLabels addObject:label];
     }

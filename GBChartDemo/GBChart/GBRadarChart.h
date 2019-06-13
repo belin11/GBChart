@@ -10,6 +10,12 @@
 
 @class GBRadarChartDataItem;
 
+typedef NS_ENUM(NSUInteger, GBRadarChartLabelStyle) {
+    GBRadarChartLabelStyleCircle = 0, //圆环
+    GBRadarChartLabelStyleHorizontal, //水平
+    GBRadarChartLabelStyleHidden, //隐藏
+};
+
 @interface GBRadarChart : UIView
 
 /**
@@ -27,13 +33,14 @@
 
 /**
  更新图表
- 
  @param chartData 模型数组
  */
 - (void)updateChartWithChartData:(NSArray <GBRadarChartDataItem *> *)chartData;
 
 /** Array of `RadarChartDataItem` objects, one for each corner. */
 @property (nonatomic, strong) NSArray <GBRadarChartDataItem *> *chartDataItems;
+/** 展示的样式 */
+@property (nonatomic, assign) GBRadarChartLabelStyle labelStyle;
 /** The unit of this chart ,default is 1 */
 @property (nonatomic, assign) CGFloat valueDivider;
 /** The maximum for the range of values to display on the chart */
