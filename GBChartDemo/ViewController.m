@@ -93,7 +93,7 @@
     
     NSMutableArray *items = [NSMutableArray array];
     NSArray *values = @[@100,@50,@70,@30,@50,@40,@45,];
-    NSArray *descs = @[@"苹果",@"香蕉",@"花生",@"橙子",@"车",@"奶子",@"房子",];
+    NSArray *descs = @[@"苹果",@"香蕉",@"花生",@"橙子",@"车子",@"奶子",@"房子",];
     for (int i = 0; i < values.count; i++) {
         
         GBRadarChartDataItem *item = [GBRadarChartDataItem dataItemWithValue:[values[i] floatValue] description:descs[i]];
@@ -102,7 +102,7 @@
 
     GBRadarChart *radarChart = [[GBRadarChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.bounds), 400) items:items valueDivider:20];
     radarChart.isShowGraduation = YES;
-    radarChart.labelStyle = GBRadarChartLabelStyleCircle;
+    radarChart.labelStyle = GBRadarChartLabelStyleHorizontal;
     [radarChart strokeChart];
     [self.view addSubview:radarChart];
     _radarChart = radarChart;

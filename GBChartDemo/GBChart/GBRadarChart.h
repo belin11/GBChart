@@ -63,7 +63,7 @@ typedef NS_ENUM(NSUInteger, GBRadarChartLabelStyle) {
 @property (nonatomic, assign) BOOL isShowGraduation;
 /** is display animated, default is YES */
 @property (nonatomic, assign) BOOL displayAnimated;
-/** 是否是顺时针方法，默认是YES*/
+/** 是否是顺时针方向绘制，默认是YES*/
 @property (nonatomic, assign) BOOL clockwise;
 
 @end

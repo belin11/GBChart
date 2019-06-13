@@ -228,8 +228,10 @@
                 break;
             case GBRadarChartLabelStyleHorizontal:
                 label.transform = CGAffineTransformIdentity;
+                break;
             case GBRadarChartLabelStyleHidden:
                 label.hidden = YES;
+                break;
         }
         section++;
     }
