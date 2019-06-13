@@ -125,6 +125,7 @@
 
 ### 3.雷达图的使用
 **首先**，我们看一下效果图
+![雷达图.png](https://github.com/belin11/GBChart/blob/master/雷达图.png)
 
 然后看一下如何使用：
 ```
