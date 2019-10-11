@@ -154,7 +154,7 @@
     [self.layer addSublayer:layer];
 }
 
-#pragma mark - 获取x方向的坐标
+#pragma mark - 获取x方向的坐标(位置)
 - (CGFloat)getXPointWithXValue:(CGFloat)xValue item:(NSInteger)item{
     
     CGFloat x;
@@ -167,6 +167,10 @@
             x = _chartMarginLeft  + _xStep/2 + item*_xStep;
         }
         return x;
+    }
+    if (_xLabelTitles.count == 1) {
+        
+        return _chartMarginLeft + _xStep/2;
     }
     
     CGFloat xMaxValue = [_xLabelTitles.lastObject floatValue];
@@ -406,7 +410,7 @@
     
 #endif 
 }
-#pragma mark - 布局折线
+#pragma mark - 布局折线和点
 - (void)populateChartLines {
     //线
     for (int i = 0; i < _linePathArrayArray.count; i++) {

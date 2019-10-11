@@ -23,8 +23,6 @@
 @property (nonatomic, strong) NSMutableArray <UILabel *> *graduationLabels;
 
 @end
-//距离边缘的的长度
-#define kSpaceToMargin 20
 
 @implementation GBRadarChart
 
@@ -97,10 +95,16 @@
     _maxValue = [self getMaxValueFromValues:values];
     //总共有多少个多边形
     NSInteger plotCircles = _maxValue/_valueDivider;
-    //计算折线图从圆点到顶点的最大的长度
-    CGFloat maxWidthOfLabel = [self getMaxWidthForLabelFrom:descriptions];
-    //多边形中心至端点最大的长度
-    CGFloat maxLength = ceil(MIN(_centerX, _centerY) - ceil(maxWidthOfLabel)) - kSpaceToMargin;
+    
+    CGFloat margin = 0;
+    if (_labelStyle == GBRadarChartLabelStyleCircle) {
+        margin = MIN(_centerX, _centerY)*3/10;
+    } else if (_labelStyle == GBRadarChartLabelStyleHorizontal) {
+        //计算类别名称的最大Size
+       margin = [self getMaxSizeForLabelFrom:descriptions].width;
+    }
+    //计算折线图从圆点到顶点的最大的长度：多边形中心至端点最大的长度
+    CGFloat maxLength = ceil(MIN(_centerX, _centerY) - margin);
     //每相邻两个多边形至中心的长度差
     _lengthUnit = floor(maxLength/plotCircles);
     //总共的长度数组
@@ -131,16 +135,18 @@
 }
 
 #pragma mark - 获取label最大的宽度
-- (CGFloat)getMaxWidthForLabelFrom:(NSArray *)descriptions {
+- (CGSize)getMaxSizeForLabelFrom:(NSArray *)descriptions {
     
-    CGFloat maxWidth = 0;
+    CGSize maxSize = CGSizeZero;
     for (int i = 0; i < descriptions.count; i++) {
         NSString *desc = descriptions[i];
         
-        CGFloat w = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_titleFontSize]}].width;
-        maxWidth = MAX(maxWidth, w);
+        CGSize tempSize = [desc sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:_titleFontSize]}];
+        CGFloat w = MAX(maxSize.width, tempSize.width);
+        CGFloat h = MAX(maxSize.height, tempSize.height);
+        maxSize = CGSizeMake(w, h);
     }
-    return maxWidth;
+    return maxSize;
 }
 
 #pragma mark - 获取多个多边形点数组的数组
@@ -192,6 +198,8 @@
         UILabel *label = [UILabel new];
         label.textColor = _fontColor;
         label.font = [UIFont systemFontOfSize:_titleFontSize];
+        label.numberOfLines = 0;
+        label.backgroundColor = [UIColor cyanColor];
         [self addSubview:label];
         [self.titleLabels addObject:label];
         if (_canLabelTouchable) {
@@ -209,14 +217,14 @@
         NSLog(@"angleValue: %ld", angleValue);
         if (angleValue == 0) {
             x -= size.width/2;
-        } else if (angleValue > 0 && angleValue < 180) {
+        } else if (angleValue > 0 && angleValue < 180) { //在圆心的右边
             
             y -= size.height/2;
         } else if (angleValue == 180 || angleValue == -180) {
             
             x -= size.width/2;
             y -= size.height;
-        } else if (angleValue < 0 && angleValue > -180) {
+        } else if (angleValue < -0 && angleValue > -180) {
             
             x -= size.width;
             y -= size.height/2;
