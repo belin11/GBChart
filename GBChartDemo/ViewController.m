@@ -102,7 +102,7 @@
 
     GBRadarChart *radarChart = [[GBRadarChart alloc] initWithFrame:CGRectMake(0, 100, CGRectGetWidth(self.view.bounds), 400) items:items valueDivider:20];
     radarChart.isShowGraduation = YES;
-    radarChart.labelStyle = GBRadarChartLabelStyleHorizontal;
+    radarChart.labelStyle = GBRadarChartLabelStyleCircle;
     [radarChart strokeChart];
     [self.view addSubview:radarChart];
     _radarChart = radarChart;

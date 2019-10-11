@@ -230,8 +230,10 @@
             y -= size.height/2;
         }
         label.frame = CGRectMake(x, y, size.width, size.height);
+
         switch (_labelStyle) {
             case GBRadarChartLabelStyleCircle:
+                label.textAlignment = NSTextAlignmentCenter;
                 label.transform = CGAffineTransformMakeRotation(M_PI-angle);
                 break;
             case GBRadarChartLabelStyleHorizontal:
